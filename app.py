@@ -5,6 +5,7 @@ app =  Flask(__name__)
 # Use the os.environ method to import the appropriate APP_SETTINGS variables,
 # depending on our environment
 app.config.from_object(os.environ['APP_SETTINGS'])
+print(os.environ['APP_SETTINGS'])
 
 @app.route('/')
 def hello():
