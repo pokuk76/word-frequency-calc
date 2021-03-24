@@ -16,6 +16,9 @@ class Config (object):
 	TESTING = False
 	CSRF_ENABLED = True
 	SECRET_KEY = 'this-really-needs-to-be-changed'
+	SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
+	""" How would we go about having different databases for development 
+		and production/staging? """
 
 class ProductionConfig(Config):
 	DEBUG =  False
