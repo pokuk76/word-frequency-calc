@@ -2,7 +2,7 @@
 ## https://github.com/realpython/flask-by-example/blob/master/.gitignore
 
 # Byte-compiled / optimized / DLL files
-__pycache__/
+*__pycache__/
 *.py[cod]
 
 # C extensions
