@@ -1,4 +1,9 @@
-from app import db #import database connection created in app.py
+try:
+	from app import db
+except ImportError:
+	from __main__ import db
+''' Definitely need to figure out why the ff line isn't working'''
+#from app import db #import database connection created in app.py
 from sqlalchemy.dialects.postgresql import JSON
 
 class Result(db.Model):
@@ -14,6 +19,6 @@ class Result(db.Model):
 		self.url = url
 		self.result_all = result_all
 		self.result_no_stop_words = result_no_stop_words
-		
+
 	def __repr__(self):
 		return '<id  {}>'.format(self.id)
