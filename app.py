@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 
 app =  Flask(__name__)
@@ -12,9 +12,13 @@ db = SQLAlchemy(app)
 
 from models import Result
 
-@app.route('/')
-def hello():
-	return "Hello World"
+#	@app.route('/')
+#	def hello():
+#		return "Hello World"
+
+@app.route('/', methods=['GET', 'POST'])
+def index():
+	return render_template('index.html')
 
 @app.route('/<name>')
 def hello_name(name):
