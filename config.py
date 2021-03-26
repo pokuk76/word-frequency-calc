@@ -21,9 +21,11 @@ class Config (object):
 		and production/staging? """
 
 class ProductionConfig(Config):
+	SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
 	DEBUG =  False
 
 class StagingConfig(Config):
+	SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL').replace("://", "ql://", 1)
 	DEVELOPMENT = True
 	DEBUG = True
 
