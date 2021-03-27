@@ -47,8 +47,8 @@ def index():
 			text = nltk.Text(tokens)
 
 			# remove punctuation and count raw words
-			nonPunct = re.compile('.*[A-Za-z].*')
-			raw_words = [w for w in text if nonPunct.match(w)]
+			non_punct = re.compile('.*[A-Za-z].*')
+			raw_words = [w for w in text if non_punct.match(w)]
 			raw_word_count = Counter(raw_words)
 
 			# remove "stop words"
