@@ -2,22 +2,30 @@ import os
 import requests # a library for sending HTTP requests
 import operator
 import re # Hello my old friend
-import nltk
+import nltk	# Natural Language Toolkit
 from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from stop_words import stops
 from collections import Counter	# https://pymotw.com/3/collections/counter.html
 from bs4 import BeautifulSoup
+from rq import Queue
+from rq.job import Job
+from worker import conn	# Connection established to the Redis Server in the worker.py file
 
+''' Configuration section'''
 app =  Flask(__name__)
 # Use the os.environ method to import the appropriate APP_SETTINGS variables,
 # depending on our environment
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True # Why was this changed to true for the Text Processing section?
 db = SQLAlchemy(app)
+q = Queue(connection=conn)
 
 from models import Result
 
+
+def countAndSaveWords(url):
+	pass
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
