@@ -19,43 +19,50 @@
 	</head>
 	<body ng-controller="WordcountController">
 		<div class="container">
-			<h1>Wordcount 3000</h1>
+			<div class="row">
 
-			<form role="form" ng-submit="getResults()">
-				<div class="form-group">
-					<input type="text" ng-model="url" name="url" class="form-control" id="url-box" placeholder="Enter URL..."
-						   style="max-width: 300px;" autofocus required>
+				<div class="col-sm-5 col-sm-offset-1">
+					<h1>Wordcount 3000</h1>
+					<br>
+					<form role="form" ng-submit="getResults()" autocomplete="off">
+						<!-- Disable autocomplete on form input elements because this causes the sites
+							 to enable a captcha prompt (guess they assume it's a bot?)
+						-->
+						<div class="form-group">
+							<input type="text" ng-model="url" name="url" class="form-control" id="url-box" placeholder="Enter URL..."
+								   style="max-width: 300px;" autofocus required>
+						</div>
+						<button type="submit" class="btn btn-default">Submit</button>
+					</form>
 				</div>
-				<button type="submit" class="btn btn-default">Submit</button>
-			</form>
-			<br>
-			{% for error in errors %}
-				<h4>{{ error }}</h4>
-			{% endfor %}
+				<div class="col-sm-5 col-sm-offset-1">
+					<h2>Frequencies</h2>
+					<br>
+
+					<div id="results">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th>Word</th>
+									<th>Count</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% raw %}
+								<tr ng-repeat="element in wordcounts">
+									<td>{{ element[0] }}</td>
+									<td>{{ element[1] }}</td>
+								</tr>
+								{% endraw %}
+							</tbody>
+						</table>
+					</div>
+
+				</div>
+
+			</div>
 		</div>
 
-		<div class="col-sm-5 col-sm-offset-1">
-			{% if results %}
-				<h2>Frequencies</h2>
-				<br>
-				<div id="results">
-					<table class="table table-striped" style="max-width: 300px;">
-						<thead>
-							<tr>
-								<th>Word</th>
-								<th>Count</th>
-							</tr>
-						</thead>
-						{% for result in results %}
-							<tr>
-								<td>{{ result[0] }}</td>
-								<td>{{ result[1] }}</td>
-							</tr>
-						{% endfor %}
-					</table>
-				</div>
-			{% endif %}
-		</div>
 		<br><br>
 	</body>
 </html>

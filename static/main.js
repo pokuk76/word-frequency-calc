@@ -40,6 +40,8 @@
                                 $log.log(data, status);
                             } else if (status === 200) {
                                 $log.log(data);
+                                // Add the results to the $scope object so it's available in the View
+                                $scope.wordcounts = data;
                                 // When the page is available w/ data, cancel the timeout
                                 $timeout.cancel(timeout);
                                 return false;
