@@ -1,10 +1,11 @@
-(function(){
+(function() {
     'use strict';
 
     angular.module('WordcountApp', [])
 
-    .controller('WordcountController', ['$scope', '$log', '$http',
-        function($scope, $log, $http) {
+    .controller('WordcountController', ['$scope', '$log', '$http', '$timeout',
+        function($scope, $log, $http, $timeout) {
+
             // Dependency Injection and whatnot
             $scope.getResults = function() {
                 $log.log("test");
@@ -14,16 +15,42 @@
 
                 // Fire the API request
                 // Is this an ES6 promise?
-                $http.post('/start', {"url": userInput}).
-                    success(function(results) {
+                $http.post('/start', {"url": userInput})
+                    .success(function(results) {
                         $log.log(results);
-                    }).
-                    error(function(error){
+                        // Successful HTTP request results in calling getWordCount
+                        getWordCount(results);
+                    })
+                    .error(function(error){
                         $log.log(error);
                     });
 
             };
+            function getWordCount(jobID) {
+                var timeout = "";   // Okay, let's stick to var instead of let from now on
+
+                var poller = function() {
+                    // Fire another request
+                    $http.get('/results/'+jobID)
+                        /* Okay so we send a GET request to that page until the job is executed and we get data
+                            back from the page
+                        */
+                        .success(function(data, status, headers, config) {
+                            if(status === 202) {
+                                $log.log(data, status);
+                            } else if (status === 200) {
+                                $log.log(data);
+                                $timeout.cancel(timeout);
+                                return false;
+                            }
+                            /* Continue to call the poller() function every 2 seconds
+                                until the timeout is cancelled */
+                            timeout = $timeout(poller, 2000);
+                        });
+                };
+                poller();
+            }
+
         }
     ]);
-
 }());

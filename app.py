@@ -1,5 +1,6 @@
 import os
 import requests # a library for sending HTTP requests
+import json
 import operator
 import re # Hello my old friend
 import nltk	# Natural Language Toolkit
@@ -12,14 +13,16 @@ from rq import Queue
 from rq.job import Job
 from worker import conn	# Connection established to the Redis Server in the worker.py file
 
+
 ''' Configuration section'''
-app =  Flask(__name__)
+app = Flask(__name__)
 # Use the os.environ method to import the appropriate APP_SETTINGS variables,
 # depending on our environment
 app.config.from_object(os.environ['APP_SETTINGS'])
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True # Why was this changed to true for the Text Processing section?
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True  # Why was this changed to true for the Text Processing section?
 db = SQLAlchemy(app)
 q = Queue(connection=conn)
+
 
 from models import Result
 
@@ -67,22 +70,28 @@ def countAndSaveWords(url):
 		errors.append("Unable to add item to database.")
 		return {'errors': errors}
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
 	return render_template('index.html')
 
+
 @app.route('/start', methods=['POST'])
 def get_counts():
 	"""
-	View to handle Redis job creation
+	View to handle Redis job creation after used POST
 	"""
+
 	'''
 	Note: We need to import the countAndSaveWords function in our function index as the RQ package currently has
 	a bug, where it won’t find functions in the same module.
 	'''
-	from app import countAndSaveWords # this import solves a rq bug which currently exists
-	url = request.form['url'] # Extract user-entered URL from the form object
+	from app import countAndSaveWords  # this import solves a rq bug which currently exists
+
+	# Get URL from form JSON
+	data = json.loads(request.data.decode())
+	url = data['url']
 	if not url[:8].startswith(('https://', 'http://')):
 		# User no longer has to ensure URL starts with http:// or https://
 		url = 'http://' + url
@@ -121,9 +130,9 @@ def get_results(job_key):
 	else:
 		return "Nay!", 202
 
-@app.route('/<name>')
-def hello_name(name):
-	return "Hello {}!".format(name)
+# @app.route('/<name>')
+# def hello_name(name):
+# 	return "Hello {}!".format(name)
 
 if __name__=='__main__':
 	app.run()
