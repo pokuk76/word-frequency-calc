@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="WordcountApp">
 	<head>
 		<title>Wordcount</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
+
 		<script src="//code.jquery.com/jquery-2.2.1.min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+		<script src="{{ url_for('static', filename='main.js') }}"></script>
 
 		<style>
 			.container {
@@ -14,13 +17,13 @@
 
 		</style>
 	</head>
-	<body>
+	<body ng-controller="WordcountController">
 		<div class="container">
 			<h1>Wordcount 3000</h1>
 
-			<form role="form" method="POST" action="/">
+			<form role="form" ng-submit="getResults()">
 				<div class="form-group">
-					<input type="text" name="url" class="form-control" id="url-box" placeholder="Enter URL..."
+					<input type="text" ng-model="url" name="url" class="form-control" id="url-box" placeholder="Enter URL..."
 						   style="max-width: 300px;" autofocus required>
 				</div>
 				<button type="submit" class="btn btn-default">Submit</button>

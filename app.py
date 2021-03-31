@@ -70,27 +70,30 @@ def countAndSaveWords(url):
 @app.route('/', methods=['GET', 'POST'])
 def index():
 
-	results = {}
+	return render_template('index.html')
 
-	if request.method == "POST":
+@app.route('/start', methods=['POST'])
+def get_counts():
+	"""
+	View to handle Redis job creation
+	"""
+	'''
+	Note: We need to import the countAndSaveWords function in our function index as the RQ package currently has
+	a bug, where it won’t find functions in the same module.
+	'''
+	from app import countAndSaveWords # this import solves a rq bug which currently exists
+	url = request.form['url'] # Extract user-entered URL from the form object
+	if not url[:8].startswith(('https://', 'http://')):
+		# User no longer has to ensure URL starts with http:// or https://
+		url = 'http://' + url
 
-		'''
-		Note: We need to import the countAndSaveWords function in our function index as the RQ package currently has 
-		a bug, where it won’t find functions in the same module.
-		'''
-		from app import countAndSaveWords # this import solves a rq bug which currently exists
-		url = request.form['url'] # Extract user-entered URL from the form object
-		if not url[:8].startswith(('https://', 'http://')):
-			# User no longer has to ensure URL starts with http:// or https://
-			url = 'http://' + url
+	''' Add a new job to the queue to run countAndSaveWords function '''
+	job = q.enqueue_call(
+		func=countAndSaveWords, args=(url,), result_ttl=5000
+	)
+	# Return created job ID
+	return job.get_id()
 
-		''' Add a new job to the queue to run countAndSaveWords function '''
-		job = q.enqueue_call(
-			func=countAndSaveWords, args=(url,), result_ttl=5000
-		)
-		print(job.get_id())
-
-	return render_template('index.html', results=results)
 
 @app.route("/results/<job_key>", methods=['GET'])
 def get_results(job_key):
