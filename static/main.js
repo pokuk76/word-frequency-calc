@@ -40,12 +40,13 @@
                                 $log.log(data, status);
                             } else if (status === 200) {
                                 $log.log(data);
+                                // When the page is available w/ data, cancel the timeout
                                 $timeout.cancel(timeout);
                                 return false;
                             }
                             /* Continue to call the poller() function every 2 seconds
                                 until the timeout is cancelled */
-                            timeout = $timeout(poller, 2000);
+                            timeout = $timeout(poller, 2000); // Poll every 2 seconds until timeout is cancelled (w/ a 200 response)
                         });
                 };
                 poller();
