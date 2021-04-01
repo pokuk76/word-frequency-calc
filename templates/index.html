@@ -53,14 +53,16 @@
 							</thead>
 							<tbody>
 								{% raw %}
-								<tr ng-repeat="element in wordcounts">
-									<td>{{ element[0] }}</td>
-									<td>{{ element[1] }}</td>
+								<tr ng-repeat="(key, value) in wordcounts">
+									<td>{{ key }}</td>
+									<td>{{ value }}</td>
 								</tr>
 								{% endraw %}
 							</tbody>
 						</table>
 					</div>
+					<img class="col-sm-3 col-sm-offset-4"
+							src="{{ url_for('static', filename='spinner.gif')}}" ng-show="loading">
 
 				</div>
 
