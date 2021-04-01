@@ -79,8 +79,41 @@
                         });
                 };
                 poller();
-            }
-
+            };
         }
-    ]);
+    ])
+
+    .directive('wordCountChart', ['$parse', '$log', function($parse, $log)  {
+        return {
+            restrict: 'E', // Creates a Directive that is restricted to an HTML element
+            replace: true, // Replaces the HTML Directive with the HTML in the template below
+            template: '<div id="chart"></div>',
+            link: function(scope) {  // Allows access to the variables in the scope defined in the controller
+                scope.$watch('wordcounts', function() {
+                    // Clear out chart each time $scope.watch is called
+                    d3.select('#chart').selectAll('*').remove();
+
+                    var data = scope.wordcounts;
+                    for (var word_index in data) {
+                        $log.log("Word in Data: ", word_index);
+
+                        var key = data[word_index][0];
+                        var value = data[word_index][1];
+                        d3.select('#chart')
+                          .append('div')
+                          .selectAll('div')
+                          .data(word_index) //  Not sure about this line
+                          .enter()
+                          .append('div')
+                          .style('width', function() {
+                            return (value * 3) + 'px';
+                          })
+                          .text(function(d) {
+                            return key;
+                          });
+                    }
+                }, true);
+            },
+        };
+    }]);
 }());
