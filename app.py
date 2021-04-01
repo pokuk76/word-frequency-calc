@@ -67,7 +67,7 @@ def countAndSaveWords(url):
 		db.session.commit()
 		return result.id
 	except:
-		errors.append("Unable to add item to database.")
+		errors.append("Unable to add result to database.")
 		return {'errors': errors}
 
 
@@ -115,18 +115,25 @@ def get_results(job_key):
 	job = Job.fetch(job_key, connection=conn)
 
 	if job.is_finished:
-		''' Get the results for the job from the database '''
-		result = Result.query.filter_by(id=job.result).first()	# job.result is the id/pk of result in the db
-		results = sorted(
-				result.result_no_stop_words.items(),
-				key = operator.itemgetter(1),
-				reverse = True
-		)[:10]
-		'''
-		If we wanted to display the first N keyword:
-		results = sorted(...)[:N]
-		'''
-		return jsonify(results)
+		# TODO: job.result could be an error dict, need to handle that
+		# TODO: Ok that's^ handled but maybe we could make it more robust
+		try:
+			''' Get the results for the job from the database '''
+			result = Result.query.filter_by(id=job.result).first()	# job.result is the id/pk of result in the db
+			results = sorted(
+					result.result_no_stop_words.items(),
+					key = operator.itemgetter(1),
+					reverse = True
+			)[:10]
+			'''
+			If we wanted to display the first N keyword:
+			results = sorted(...)[:N]
+			'''
+			return jsonify(results)
+		except:
+			# If job.result is an error dict, just return an empty dictionary (i.e. an empty JSON object)
+			job.result['error_status'] = True #TODO: Move this into countAndSaveWords and have it be error type?
+			return jsonify(job.result)
 	else:
 		return "Nay!", 202
 

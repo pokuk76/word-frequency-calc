@@ -40,6 +40,7 @@
 					</form>
 
 					<div class="alert alert-danger" role="alert" ng-show="urlerror">
+						<!-- This isn't even working? -->
 						<span class="glyphicon glyphicon-exclamation-sign"></span>
 						<span class="sr-only">Error:</span>
 						<span>
@@ -63,8 +64,8 @@
 							<tbody>
 								{% raw %}
 								<tr ng-repeat="(key, value) in wordcounts">
-									<td>{{ key }}</td>
-									<td>{{ value }}</td>
+									<td>{{ value[0] }}</td>
+									<td>{{ value[1] }}</td>
 								</tr>
 								{% endraw %}
 							</tbody>

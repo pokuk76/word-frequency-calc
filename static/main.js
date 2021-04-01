@@ -11,8 +11,6 @@
             $scope.loading = false;
             $scope.urlerror = false;
             $scope.getResults = function() {
-                $log.log("test");
-
                 // Get the URL from the input
                 var userInput = $scope.url;
 
@@ -20,7 +18,7 @@
                 // Is this an ES6 promise?
                 $http.post('/start', {"url": userInput})
                     .success(function(results) {
-                        $log.log(results);
+                        $log.log("Results from /start endpoint:", results);
                         // Successful HTTP request results in calling getWordCount
                         getWordCount(results);
                         $scope.urlerror = false;
@@ -46,13 +44,25 @@
                         */
                         .success(function(data, status, headers, config) {
                             if(status === 202) {
-                                $log.log(data, status);
+
+                                $log.log("Data from 202: ", data, status);
                             } else if (status === 200) {
-                                $log.log(data);
+                                $log.log("Data from 200: ", data);
+                                if (data['error_status']) {
+                                    // If the data doesn't have an error,
+                                    // the value for that key will be undefined, which evaluates to false
+                                    $scope.urlerror = true;
+                                    $scope.loading = false;
+                                    $scope.submitButtonText = "Submit";
+                                    $scope.wordcounts = {}; // Wordcounts should just be an empty JSON
+                                    $timeout.cancel(timeout);
+                                    return false;
+                                }
                                 $scope.loading = false;
                                 $scope.submitButtonText = "Submit";
                                 // Add the results to the $scope object so it's available in the View
-                                $scope.wordcounts = data;
+                                $scope.wordcounts = data; // For some reason, data is coming back as an array instead of a JSON object
+
                                 // When the page is available w/ data, cancel the timeout
                                 $timeout.cancel(timeout);
                                 return false;
