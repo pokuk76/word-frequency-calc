@@ -29,10 +29,14 @@
 							 to enable a captcha prompt (guess they assume it's a bot?)
 						-->
 						<div class="form-group">
-							<input type="text" ng-model="url" name="url" class="form-control" id="url-box" placeholder="Enter URL..."
-								   style="max-width: 300px;" autofocus required>
+							<input type="text" ng-model="url" name="url" class="form-control" id="url-box"
+								   placeholder="Enter URL..." style="max-width: 300px;" autofocus required>
 						</div>
-						<button type="submit" class="btn btn-default">Submit</button>
+						{% raw %}
+						<button type="submit" class="btn btn-default" ng-disabled="loading">
+							{{ submitButtonText }}
+						</button>
+						{% endraw %}
 					</form>
 				</div>
 				<div class="col-sm-5 col-sm-offset-1">

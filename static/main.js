@@ -7,6 +7,8 @@
         function($scope, $log, $http, $timeout) {
 
             // Dependency Injection and whatnot
+            $scope.submitButtonText = 'Submit'; // Ok so string do have to be in single quotes?
+            $scope.loading = false;
             $scope.getResults = function() {
                 $log.log("test");
 
@@ -20,6 +22,11 @@
                         $log.log(results);
                         // Successful HTTP request results in calling getWordCount
                         getWordCount(results);
+                        // Set wordcounts to null so that "the old values get cleared out" -> Not sure where that happens
+                        $scope.wordcounts = null;
+                        // Set loading to true so that submit button will be disabled via ng-disabled directive
+                        $scope.loading = true;
+                        $scope.submitButtonText = "Loading...";
                     })
                     .error(function(error){
                         $log.log(error);
@@ -40,6 +47,8 @@
                                 $log.log(data, status);
                             } else if (status === 200) {
                                 $log.log(data);
+                                $scope.loading = false;
+                                $scope.submitButtonText = "Submit";
                                 // Add the results to the $scope object so it's available in the View
                                 $scope.wordcounts = data;
                                 // When the page is available w/ data, cancel the timeout
