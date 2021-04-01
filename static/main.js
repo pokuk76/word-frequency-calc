@@ -18,7 +18,6 @@
                 // Is this an ES6 promise?
                 $http.post('/start', {"url": userInput})
                     .success(function(results) {
-                        $log.log("Results from /start endpoint:", results);
                         // Successful HTTP request results in calling getWordCount
                         getWordCount(results);
                         $scope.urlerror = false;
@@ -44,10 +43,9 @@
                         */
                         .success(function(data, status, headers, config) {
                             if(status === 202) {
-
-                                $log.log("Data from 202: ", data, status);
+                                var pass = 'pass';
                             } else if (status === 200) {
-                                $log.log("Data from 200: ", data);
+
                                 if (data['error_status']) {
                                     // If the data doesn't have an error,
                                     // the value for that key will be undefined, which evaluates to false
