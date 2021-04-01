@@ -93,7 +93,6 @@
 
                     var data = scope.wordcounts;
                     for (var word_index in data) {
-                        $log.log("Word in Data: ", word_index);
 
                         var key = data[word_index][0];
                         var value = data[word_index][1];
