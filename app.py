@@ -100,7 +100,7 @@ def get_counts():
 	job = q.enqueue_call(
 		func=countAndSaveWords, args=(url,), result_ttl=5000
 	)
-	# Return created job ID
+	# Return ID of the job created
 	return job.get_id()
 
 

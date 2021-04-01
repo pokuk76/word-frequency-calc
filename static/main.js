@@ -9,6 +9,7 @@
             // Dependency Injection and whatnot
             $scope.submitButtonText = 'Submit'; // Ok so string do have to be in single quotes?
             $scope.loading = false;
+            $scope.urlerror = false;
             $scope.getResults = function() {
                 $log.log("test");
 
@@ -22,6 +23,7 @@
                         $log.log(results);
                         // Successful HTTP request results in calling getWordCount
                         getWordCount(results);
+                        $scope.urlerror = false;
                         // Set wordcounts to null so that "the old values get cleared out" -> Not sure where that happens
                         $scope.wordcounts = null;
                         // Set loading to true so that submit button will be disabled via ng-disabled directive
@@ -58,6 +60,12 @@
                             /* Continue to call the poller() function every 2 seconds
                                 until the timeout is cancelled */
                             timeout = $timeout(poller, 2000); // Poll every 2 seconds until timeout is cancelled (w/ a 200 response)
+                        })
+                        .error(function(error) {
+                            $log.log(error);
+                            $scope.loading = false;
+                            $scope.submitButtonText = 'Submit';
+                            $scope.urlerror = true;
                         });
                 };
                 poller();
